@@ -37,7 +37,13 @@ Para este ejercicio realizamos un record-triggered flow asociado a `Contact`
 ![Comunicacion entre componentes](https://github.com/Azursxz/ProContacto-CheckPoint-1/blob/main/Comunicacion%20Componentes.drawio.png)
 
 
+## 4: Creacion App "CheckPoint 1"
 
+Para poder realizar este ejercicio vamos a `setup` -> `Lightning Experience App Manager` -> `New Lightning App` 
+en la cual agregamos las Tabs que nos pide el ejercicio
+
+Para agregar el `related list` a `Accounts` y `Contacts` vamos a
+`setup`-> `object manager` -> seleccionamos el objeto -> `page layouts` y agregamos proyectos en el apartado de `related list`
 
 
 
