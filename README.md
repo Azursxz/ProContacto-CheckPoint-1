@@ -34,7 +34,7 @@ Para este ejercicio realizamos un record-triggered flow asociado a `Contact`
 
 ## 3: Comunicacion entre componentes
 
-
+![Comunicacion entre componentes](https://github.com/Azursxz/ProContacto-CheckPoint-1/blob/main/Comunicacion%20Componentes.drawio.png)
 
 
 
