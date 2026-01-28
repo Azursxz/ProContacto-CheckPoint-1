@@ -6,6 +6,7 @@
                 <strong>Cuenta:</strong> {account.Name}
             </p>
 
+            
             <p class="slds-p-horizontal_small">
                 <strong>Presupuesto Total:</strong>
                 <lightning-formatted-number
@@ -17,11 +18,12 @@
             <p class="slds-p-horizontal_small">
                 <strong>Total de Recursos:</strong> {summary.totalResources}
             </p>
+
         </template>
 
         <template if:false={account}>
             <lightning-spinner size="small"></lightning-spinner>
         </template>
-
+        
     </lightning-card>
 </template>

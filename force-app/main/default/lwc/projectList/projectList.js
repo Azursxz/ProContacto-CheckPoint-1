@@ -38,7 +38,7 @@ export default class ProjectList extends LightningElement {
 
     columns = [
         { label: 'Proyecto', fieldName: 'Name' },
-        { label: 'Contacto', fieldName: 'ContactoName' , type: 'text'},
+        { label: 'Contacto', fieldName: 'ContactoName'},
         { label: 'Presupuesto', fieldName: 'Presupuesto__c', type: 'currency' },
         { label: 'Estado', fieldName: 'Estado__c' },
         {
@@ -54,7 +54,12 @@ export default class ProjectList extends LightningElement {
     @wire(getProjects, { accountId: '$_accountId' })
     wiredProjects(result) {
         this.wiredResult = result;
-        if (result.data) this.projects = result.data;
+        if (result.data) {
+            this.projects = result.data;
+        }
+        else if (result.error) {
+            console.error(result.error);
+        }
     }
 
     async handleRowAction(event) {

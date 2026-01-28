@@ -6,17 +6,17 @@ export default class AccountProjectHome extends LightningElement {
 
     handleAccountSelect(event) {
         this.accountId = event.detail;
-        setTimeout(() => {
-            this.refreshKey++;
-        }, 100);
+        
+        this.refreshKey ++;
+
     }
 
     handleCreateProject(event) {
-        this.refreshKey++;
+        this.refreshKey ++;
     }
 
     handleDeleteProject(event){
-        this.refreshKey++;
+        this.refreshKey ++;
     }
 
 

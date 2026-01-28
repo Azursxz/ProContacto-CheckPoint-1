@@ -1,20 +1,16 @@
-@istest
+@IsTest
 public class ProyectoContactoHandlerTest {
     @IsTest
     static void testActualizarDescripcionContactos() {
-
         Account cuenta = new Account(Name = 'Test');
         insert cuenta;
-        
         Contact contacto = new Contact(
             FirstName = 'Test',
             LastName = 'Contact',
             AccountId = cuenta.Id
         );
         insert contacto;
-        
         Set<Id> contactoIds = new Set<Id>{contacto.Id};
-        
         // Crear proyecto con presupuesto > 50000
         Proyecto__c proyecto = new Proyecto__c(
             Name = 'Test',
@@ -24,13 +20,9 @@ public class ProyectoContactoHandlerTest {
             Contacto__c = contacto.Id
         );
         insert proyecto;
-        
         Test.startTest();
-        
-        
         ProyectoContactoHandler.actualizarDescripcionContactos(contactoIds);
         Test.stopTest();
-        
         Contact result = [SELECT Descripcion__c FROM Contact WHERE Id = :contacto.Id];
         System.assert(result.Descripcion__c.contains('presupuesto alto'));
     }
@@ -40,21 +32,16 @@ public class ProyectoContactoHandlerTest {
         // Contacto sin proyectos
         Account cuenta = new Account(Name = 'Test');
         insert cuenta;
-        
         Contact contacto = new Contact(
             FirstName = 'Test',
             LastName = 'Contact',
             AccountId = cuenta.Id
         );
         insert contacto;
-        
         Set<Id> contactoIds = new Set<Id>{contacto.Id};
-        
         Test.startTest();
-        
         ProyectoContactoHandler.actualizarDescripcionContactos(contactoIds);
         Test.stopTest();
-        
         Contact result = [SELECT Descripcion__c FROM Contact WHERE Id = :contacto.Id];
         System.assertEquals('NO tiene un proyecto con alto presupuesto.', result.Descripcion__c);
     }
