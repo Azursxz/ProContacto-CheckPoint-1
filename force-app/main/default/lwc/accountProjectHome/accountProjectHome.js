@@ -6,7 +6,7 @@ import { LightningElement } from "lwc";
  */
 export default class AccountProjectHome extends LightningElement {
   accountId;
-  refreshKey = 0;
+  refreshKey;
 
   /**
    * Maneja la selección de una cuenta desde el componente de búsqueda.
@@ -15,7 +15,7 @@ export default class AccountProjectHome extends LightningElement {
    */
   handleAccountSelect(event) {
     this.accountId = event.detail;
-    this.refreshKey++;
+    this.refreshKey = Date.now();
   }
 
   /**
@@ -24,7 +24,7 @@ export default class AccountProjectHome extends LightningElement {
    * @param {CustomEvent} event - El evento de creación
    */
   handleCreateProject(event) {
-    this.refreshKey++;
+    this.refreshKey = Date.now();
   }
 
   /**
@@ -33,6 +33,6 @@ export default class AccountProjectHome extends LightningElement {
    * @param {CustomEvent} event - El evento de eliminación
    */
   handleDeleteProject(event) {
-    this.refreshKey++;
+    this.refreshKey = Date.now();
   }
 }

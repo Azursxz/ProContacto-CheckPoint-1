@@ -30,7 +30,7 @@ public with sharing class AccountProjectController {
   @AuraEnabled(cacheable=true)
   public static Map<String, Decimal> getAccountSummary(
     Id accountId,
-    Integer refreshKey
+    Long refreshKey
   ) {
     AggregateResult ar = [
       SELECT SUM(Presupuesto__c) totalBudget, SUM(Recursos__c) totalResources
