@@ -1,28 +1,34 @@
 <template>
-<lightning-card title="Nuevo Proyecto">
+  <lightning-card title="Nuevo Proyecto">
     <lightning-record-edit-form
-        object-api-name="Proyecto__c"
-        onsuccess={handleSuccess}
-        onerror={handleError}>
-        <lightning-messages></lightning-messages>
+      object-api-name="Proyecto__c"
+      onsuccess={handleSuccess}
+      onerror={handleError}
+    >
+      <lightning-messages></lightning-messages>
 
+      <lightning-input-field field-name="Account__c" value={accountId}>
+      </lightning-input-field>
 
-        <lightning-input-field
-            field-name="Account__c"
-            value={accountId}>
-        </lightning-input-field>
-     
+      <lightning-input-field
+        data-reset
+        field-name="Name"
+      ></lightning-input-field>
+      <lightning-input-field
+        data-reset
+        field-name="Contacto__c"
+      ></lightning-input-field>
+      <lightning-input-field
+        data-reset
+        field-name="Presupuesto__c"
+      ></lightning-input-field>
+      <lightning-input-field
+        data-reset
+        field-name="Estado__c"
+      ></lightning-input-field>
 
-        <lightning-input-field data-reset field-name="Name"></lightning-input-field>
-        <lightning-input-field data-reset field-name="Contacto__c"></lightning-input-field>
-        <lightning-input-field data-reset field-name="Presupuesto__c"></lightning-input-field>
-        <lightning-input-field data-reset field-name="Estado__c"></lightning-input-field>
-
-        <lightning-button
-            type="submit"
-            label="Crear Proyecto"
-            variant="brand">
-        </lightning-button>
+      <lightning-button type="submit" label="Crear Proyecto" variant="brand">
+      </lightning-button>
     </lightning-record-edit-form>
-</lightning-card>
+  </lightning-card>
 </template>

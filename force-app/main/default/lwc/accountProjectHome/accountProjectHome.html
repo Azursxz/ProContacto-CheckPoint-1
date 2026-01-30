@@ -1,15 +1,21 @@
 <template>
-    <lightning-card title="Gestión de Proyectos por Cuenta">
+  <lightning-card title="Gestión de Proyectos por Cuenta">
+    <c-account-search onaccountselect={handleAccountSelect}> </c-account-search>
 
-        <c-account-search
-            onaccountselect={handleAccountSelect}>
-        </c-account-search>
-
-        <template if:true={accountId}>
-            <c-account-summary account-id={accountId} refresh-key={refreshKey}></c-account-summary>
-            <c-project-form account-id={accountId} onprojectcreated={handleCreateProject}></c-project-form>
-            <c-project-list account-id={accountId} refresh-key={refreshKey} onprojectdelete={handleDeleteProject}></c-project-list>
-        </template>
-
-    </lightning-card>
+    <template if:true={accountId}>
+      <c-account-summary
+        account-id={accountId}
+        refresh-key={refreshKey}
+      ></c-account-summary>
+      <c-project-form
+        account-id={accountId}
+        onprojectcreated={handleCreateProject}
+      ></c-project-form>
+      <c-project-list
+        account-id={accountId}
+        refresh-key={refreshKey}
+        onprojectdelete={handleDeleteProject}
+      ></c-project-list>
+    </template>
+  </lightning-card>
 </template>

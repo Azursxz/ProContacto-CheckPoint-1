@@ -1,29 +1,26 @@
 <template>
-    <lightning-card title="Resumen de Cuenta">
+  <lightning-card title="Resumen de Cuenta">
+    <template if:true={account}>
+      <p class="slds-p-horizontal_small">
+        <strong>Cuenta:</strong> {account.Name}
+      </p>
 
-        <template if:true={account}>
-            <p class="slds-p-horizontal_small">
-                <strong>Cuenta:</strong> {account.Name}
-            </p>
+      <p class="slds-p-horizontal_small">
+        <strong>Presupuesto Total:</strong>
+        <lightning-formatted-number
+          value={summary.totalBudget}
+          format-style="currency"
+        >
+        </lightning-formatted-number>
+      </p>
 
-            
-            <p class="slds-p-horizontal_small">
-                <strong>Presupuesto Total:</strong>
-                <lightning-formatted-number
-                    value={summary.totalBudget}
-                    format-style="currency">
-                </lightning-formatted-number>
-            </p>
+      <p class="slds-p-horizontal_small">
+        <strong>Total de Recursos:</strong> {summary.totalResources}
+      </p>
+    </template>
 
-            <p class="slds-p-horizontal_small">
-                <strong>Total de Recursos:</strong> {summary.totalResources}
-            </p>
-
-        </template>
-
-        <template if:false={account}>
-            <lightning-spinner size="small"></lightning-spinner>
-        </template>
-        
-    </lightning-card>
+    <template if:false={account}>
+      <lightning-spinner size="small"></lightning-spinner>
+    </template>
+  </lightning-card>
 </template>
