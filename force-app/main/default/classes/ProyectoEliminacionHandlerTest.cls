@@ -124,14 +124,14 @@ public with sharing class ProyectoEliminacionHandlerTest {
   /**
    * @description
    * Verifica que un proyecto cuyo estado NO sea "Planeado"
-   * pueda eliminarse correctamente.
+   * no pueda eliminarse correctamente.
    *
    * Escenario:
    * - Proyecto en estado "Finalizado"
    *
    * Resultado esperado:
-   * - El delete se ejecuta sin errores
-   * - El proyecto se elimina de la base de datos
+   * - El delete no se ejecuta correctamente
+   * - El proyecto no elimina de la base de datos
    */
   @IsTest
   static void testEliminarNoPlaneado() {
@@ -151,26 +151,61 @@ public with sharing class ProyectoEliminacionHandlerTest {
         WHERE AccountId = :cuenta[0].Id
         LIMIT 1
       ];
-      Proyecto__c proyecto = new Proyecto__c(
-        Name = 'Test',
+      List<Proyecto__c> proyectos = new List<Proyecto__c>();
+
+      Proyecto__c proyectoFinalizado = new Proyecto__c(
+        Name = 'Proyecto Finalizado',
         Account__c = cuenta[0].Id,
         Contacto__c = contacto[0].Id,
         Presupuesto__c = 5000,
         Estado__c = 'Finalizado',
         Fecha_de_Inicio__c = Date.today()
       );
-      insert proyecto;
+
+      Proyecto__c proyectoEnProgreso = new Proyecto__c(
+        Name = 'Proyecto En Progreso',
+        Account__c = cuenta[0].Id,
+        Contacto__c = contacto[0].Id,
+        Presupuesto__c = 6000,
+        Estado__c = 'En Progreso',
+        Fecha_de_Inicio__c = Date.today()
+      );
+
+      Proyecto__c proyectoPlaneadoReciente = new Proyecto__c(
+        Name = 'Proyecto Planeado Reciente',
+        Account__c = cuenta[0].Id,
+        Contacto__c = contacto[0].Id,
+        Presupuesto__c = 7000,
+        Estado__c = 'Planeado',
+        Fecha_de_Inicio__c = Date.today()
+      );
+
+      proyectos.add(proyectoFinalizado);
+      proyectos.add(proyectoEnProgreso);
+      proyectos.add(proyectoPlaneadoReciente);
+      insert proyectos;
+
       Test.startTest();
-      delete proyecto;
+      try {
+        delete proyectos;
+        Assert.fail(
+          'Se esperaba una excepción al intentar eliminar un proyecto no Planeado'
+        );
+      } catch (DmlException e) {
+        Assert.isTrue(
+          e.getMessage()
+            .contains('solo se permiten eliminar proyectos en estado Planeado'),
+          'El mensaje de error no es el esperado'
+        );
+      }
       Test.stopTest();
 
       List<Proyecto__c> listaResultado = [
         SELECT Id
         FROM Proyecto__c
-        WHERE Id = :proyecto.Id
       ];
 
-      Assert.areEqual(0, listaResultado.size());
+      Assert.areEqual(3, listaResultado.size());
     }
   }
   /**

@@ -1,6 +1,7 @@
 import { LightningElement, api, wire } from "lwc";
 import getAccount from "@salesforce/apex/AccountProjectController.getAccount";
 import getAccountSummary from "@salesforce/apex/AccountProjectController.getAccountSummary";
+import { refreshApex } from "@salesforce/apex";
 
 /**
  * Componente para mostrar un resumen de los proyectos de la cuenta.
@@ -13,12 +14,6 @@ export default class AccountSummary extends LightningElement {
    * @type {string}
    */
   @api accountId;
-  /**
-   * Clave utilizada para forzar el refresco del resumen.
-   * Cuando cambia, se vuelve a ejecutar el wire de getAccountSummary.
-   * @type {string|number}
-   */
-  @api refreshKey;
   /**
    * Datos completos de la cuenta recuperados desde Apex.
    * Se asigna en el wire `wiredAccount`.
@@ -40,6 +35,12 @@ export default class AccountSummary extends LightningElement {
    */
   wiredSummaryResult;
 
+  @api
+  refresh() {
+    if (this.wiredSummaryResult) {
+      refreshApex(this.wiredSummaryResult);
+    }
+  }
   /**
    * Método cableado (wired) para recuperar detalles de la cuenta.
    * @param {Object} result - El objeto resultado del wire
@@ -64,8 +65,7 @@ export default class AccountSummary extends LightningElement {
    * @param {Object} result - El objeto resultado del wire
    */
   @wire(getAccountSummary, {
-    accountId: "$accountId",
-    refreshKey: "$refreshKey"
+    accountId: "$accountId"
   })
   wiredSummary(result) {
     this.wiredSummaryResult = result;

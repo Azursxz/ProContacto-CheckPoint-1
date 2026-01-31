@@ -20,6 +20,11 @@ public with sharing class ProyectoEliminacionHandler {
     for (Proyecto__c proy : proyectos) {
       // Solo aplica a proyectos Planeados
       if (proy.Estado__c != 'Planeado') {
+        proy.addError(
+          'No se puede eliminar el proyecto "' +
+            proy.Name +
+            '" porque solo se permiten eliminar proyectos en estado Planeado.'
+        );
         continue;
       }
 

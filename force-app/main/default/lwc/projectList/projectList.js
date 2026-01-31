@@ -3,6 +3,8 @@ import getProjects from "@salesforce/apex/AccountProjectController.getProjects";
 import deleteProject from "@salesforce/apex/AccountProjectController.deleteProject";
 import { refreshApex } from "@salesforce/apex";
 import LightningConfirm from "lightning/confirm";
+import { ShowToastEvent } from "lightning/platformShowToastEvent";
+
 /**
  * Componente ProjectList
  * ---------------------
@@ -13,31 +15,9 @@ export default class ProjectList extends LightningElement {
   /**
    * Clave utilizada para forzar el refresh del @wire desde el componente padre.
    */
-  _refreshKey;
   wiredResult;
   projects;
   _accountId;
-
-  /**
-   * Setter de refreshKey.
-   * Cuando cambia el valor, se refresca la llamada wire a Apex.
-   *
-   * @param {*} value Nuevo valor del refreshKey
-   */
-  @api
-  set refreshKey(value) {
-    this._refreshKey = value;
-
-    if (this.wiredResult) {
-      refreshApex(this.wiredResult);
-    }
-  }
-  /**
-   * Getter de refreshKey
-   */
-  get refreshKey() {
-    return this._refreshKey;
-  }
 
   /**
    * Id de la Account.
@@ -71,6 +51,12 @@ export default class ProjectList extends LightningElement {
     }
   ];
 
+  @api
+  refresh() {
+    if (this.wiredResult) {
+      refreshApex(this.wiredResult);
+    }
+  }
   /**
    * Obtiene los proyectos asociados a la Account mediante Apex.
    * Se guarda la referencia del wire para poder refrescarla luego.
@@ -93,20 +79,47 @@ export default class ProjectList extends LightningElement {
    */
   async handleRowAction(event) {
     if (event.detail.action.name === "delete") {
-      // Mostrar confirmación antes de eliminar
-
       const confirmed = await LightningConfirm.open({
         message: "¿Eliminar proyecto?",
         label: "Confirmar"
       });
 
-      if (confirmed) {
-        // Eliminar proyecto vía Apex
+      if (!confirmed) {
+        return;
+      }
+
+      try {
+        // Llamada a Apex
         await deleteProject({ projectId: event.detail.row.Id });
-        // Avisar al componente padre
+
+        // Éxito
+        this.dispatchEvent(
+          new ShowToastEvent({
+            title: "Proyecto eliminado",
+            message: "El proyecto se eliminó correctamente",
+            variant: "success"
+          })
+        );
+
+        this.refresh();
         this.dispatchEvent(new CustomEvent("projectdelete"));
-        // Refrescar la lista de proyectos
-        refreshApex(this.wiredResult);
+      } catch (error) {
+        let message =
+          "No se pudo eliminar el proyecto, solo se pueden eliminar proyectos en estado 'Planeado' que hayan iniciado hace mas de un año.";
+
+        if (error?.body?.message) {
+          message = error.body.message;
+        }
+
+        this.dispatchEvent(
+          new ShowToastEvent({
+            title: "Error al eliminar",
+            message,
+            variant: "error"
+          })
+        );
+
+        console.error("Error eliminando proyecto:", error);
       }
     }
   }

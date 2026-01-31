@@ -24,14 +24,10 @@ public with sharing class AccountProjectController {
    * asociados a una cuenta.
    *
    * @param accountId Id de la cuenta
-   * @param refreshKey Clave para forzar refresco desde LWC
    * @return Mapa con totalBudget y totalResources
    */
   @AuraEnabled(cacheable=true)
-  public static Map<String, Decimal> getAccountSummary(
-    Id accountId,
-    Long refreshKey
-  ) {
+  public static Map<String, Decimal> getAccountSummary(Id accountId) {
     AggregateResult ar = [
       SELECT SUM(Presupuesto__c) totalBudget, SUM(Recursos__c) totalResources
       FROM Proyecto__c

@@ -143,8 +143,7 @@ public class AccountProjectControllerTest {
       insert new List<Proyecto__c>{ proyecto1, proyecto2 };
       Test.startTest();
       Map<String, Decimal> result = AccountProjectController.getAccountSummary(
-        cuenta[0].Id,
-        1
+        cuenta[0].Id
       );
       Test.stopTest();
       Assert.areNotEqual(null, result, 'El resultado no debería ser null');
@@ -222,15 +221,16 @@ public class AccountProjectControllerTest {
   }
   /**
    * @description
-   * Verifica que el método deleteProject elimine correctamente
-   * un proyecto existente.
+   * Verifica que el método deleteProject no elimine
+   * un proyecto existente si este no es Planeado
+   * y esta hace mas de 1 año.
    *
    * Escenario:
    * - Se crea un proyecto asociado a una cuenta
    * - Se invoca el método deleteProject con su Id
    *
    * Resultado esperado:
-   * - El proyecto se elimina de la base de datos
+   * - El proyecto no se elimina de la base de datos
    */
   @IsTest
   static void testDeleteProject() {
@@ -270,7 +270,19 @@ public class AccountProjectControllerTest {
         'Debería existir 1 proyecto antes'
       );
       Test.startTest();
-      AccountProjectController.deleteProject(proyecto.Id);
+      try {
+        AccountProjectController.deleteProject(proyecto.Id);
+        System.assert(
+          false,
+          'Se esperaba una excepción al eliminar el proyecto'
+        );
+      } catch (DmlException e) {
+        System.assert(
+          e.getMessage()
+            .contains('solo se permiten eliminar proyectos en estado Planeado'),
+          'El mensaje de error no es el esperado'
+        );
+      }
       Test.stopTest();
       List<Proyecto__c> proyectosDespues = [
         SELECT Id
@@ -278,9 +290,9 @@ public class AccountProjectControllerTest {
         WHERE Id = :proyecto.Id
       ];
       Assert.areEqual(
-        0,
+        1,
         proyectosDespues.size(),
-        'El proyecto debería estar eliminado'
+        'El proyecto no debería estar eliminado'
       );
     }
   }
