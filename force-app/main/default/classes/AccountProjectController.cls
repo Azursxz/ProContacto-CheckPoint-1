@@ -12,12 +12,13 @@ public with sharing class AccountProjectController {
    */
   @AuraEnabled(cacheable=true)
   public static List<Account> getAccount(Id accountId) {
-    return [
+    List<Account> result = [
       SELECT Id, Name
       FROM Account
       WHERE Id = :accountId
       WITH USER_MODE
     ];
+    return result;
   }
   /**
    * Obtiene el resumen de presupuesto y recursos de los proyectos
@@ -28,7 +29,7 @@ public with sharing class AccountProjectController {
    */
   @AuraEnabled(cacheable=true)
   public static Map<String, Decimal> getAccountSummary(Id accountId) {
-    AggregateResult ar = [
+    List<AggregateResult> ar = [
       SELECT SUM(Presupuesto__c) totalBudget, SUM(Recursos__c) totalResources
       FROM Proyecto__c
       WHERE Account__c = :accountId
@@ -37,8 +38,8 @@ public with sharing class AccountProjectController {
 
     Map<String, Decimal> result = new Map<String, Decimal>();
 
-    Decimal budget = (Decimal) ar.get('totalBudget');
-    Decimal resources = (Decimal) ar.get('totalResources');
+    Decimal budget = (Decimal) ar[0].get('totalBudget');
+    Decimal resources = (Decimal) ar[0].get('totalResources');
 
     // Usamos lógica ternaria: ¿Es null? pon 0, si no, pon el valor.
     result.put('totalBudget', budget == null ? 0 : budget);
