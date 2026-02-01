@@ -11,7 +11,7 @@ public with sharing class AccountProjectController {
    * @return Account con Id y Name
    */
   @AuraEnabled(cacheable=true)
-  public static Account getAccount(Id accountId) {
+  public static List<Account> getAccount(Id accountId) {
     return [
       SELECT Id, Name
       FROM Account

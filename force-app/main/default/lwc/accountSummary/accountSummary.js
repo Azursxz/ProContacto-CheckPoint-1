@@ -34,7 +34,10 @@ export default class AccountSummary extends LightningElement {
    * @type {Object}
    */
   wiredSummaryResult;
-
+  /**
+   * Método público expuesto al componente padre.
+   * Fuerza la recarga de los proyectos ejecutando refreshApex.
+   */
   @api
   refresh() {
     if (this.wiredSummaryResult) {

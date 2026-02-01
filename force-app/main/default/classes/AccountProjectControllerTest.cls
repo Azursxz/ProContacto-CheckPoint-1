@@ -84,11 +84,11 @@ public class AccountProjectControllerTest {
         LIMIT 1
       ];
       Test.startTest();
-      Account result = AccountProjectController.getAccount(cuenta[0].Id);
+      List<Account> result = AccountProjectController.getAccount(cuenta[0].Id);
       Test.stopTest();
       Assert.areNotEqual(null, result, 'La cuenta no debería ser null');
-      Assert.areEqual(cuenta[0].Id, result.Id, 'El ID debería coincidir');
-      Assert.areEqual('Test', result.Name, 'El nombre debería coincidir');
+      Assert.areEqual(cuenta[0].Id, result[0].Id, 'El ID debería coincidir');
+      Assert.areEqual('Test', result[0].Name, 'El nombre debería coincidir');
     }
   }
   /**

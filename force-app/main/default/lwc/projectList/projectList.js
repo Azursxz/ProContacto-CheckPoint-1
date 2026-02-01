@@ -9,14 +9,28 @@ import { ShowToastEvent } from "lightning/platformShowToastEvent";
  * Componente ProjectList
  * ---------------------
  * Muestra una lista de proyectos asociados a una Account.
- * Permite eliminar proyectos y refrescar la lista desde el componente padre.
+ *
+ * Responsabilidades:
+ * - Obtener proyectos vía Apex (@wire)
+ * - Mostrar los proyectos en un lightning-datatable
+ * - Permitir eliminar proyectos
+ * - Exponer un método público para refrescar la lista
+ * - Notificar al componente padre cuando se elimina un proyecto
  */
 export default class ProjectList extends LightningElement {
   /**
-   * Clave utilizada para forzar el refresh del @wire desde el componente padre.
+   * Referencia al resultado del @wire.
+   * Se utiliza por refreshApex para forzar la recarga de datos.
    */
   wiredResult;
+  /**
+   * Lista de proyectos a mostrar en el datatable.
+   * Proviene del método Apex getProjects.
+   */
   projects;
+  /**
+   * Backing property del accountId expuesto como @api.
+   */
   _accountId;
 
   /**
@@ -35,6 +49,8 @@ export default class ProjectList extends LightningElement {
 
   /**
    * Definición de columnas para lightning-datatable
+   *
+   * Incluye una acción de eliminación por fila.
    */
   columns = [
     { label: "Proyecto", fieldName: "Name" },
@@ -50,7 +66,10 @@ export default class ProjectList extends LightningElement {
       }
     }
   ];
-
+  /**
+   * Método público expuesto al componente padre.
+   * Fuerza la recarga de los proyectos ejecutando refreshApex.
+   */
   @api
   refresh() {
     if (this.wiredResult) {
@@ -73,9 +92,16 @@ export default class ProjectList extends LightningElement {
 
   /**
    * Maneja acciones sobre las filas del datatable.
-   * Actualmente soporta la eliminación de proyectos.
+   * Actualmente soporta la acción "delete".
    *
-   * @param {Event} event Evento de acción del datatable
+   * Flujo:
+   * 1. Solicita confirmación al usuario
+   * 2. Llama al método Apex deleteProject
+   * 3. Muestra toast de éxito o error
+   * 4. Refresca la lista de proyectos
+   * 5. Emite el evento "projectdelete" al componente padre
+   *
+   * @param {Event} event Evento emitido por lightning-datatable
    */
   async handleRowAction(event) {
     if (event.detail.action.name === "delete") {
