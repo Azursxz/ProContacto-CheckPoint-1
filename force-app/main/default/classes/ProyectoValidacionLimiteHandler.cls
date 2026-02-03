@@ -50,17 +50,8 @@ public with sharing class ProyectoValidacionLimiteHandler {
     );
     // 4. Validar cada proyecto
     for (Proyecto__c proyecto : proyectos) {
-      if (proyecto.Account__c == null || proyecto.Estado__c != 'En Progreso') {
-        continue;
-      }
+      Integer proyectosActuales = conteoPorCuenta.get(proyecto.Account__c);
       Account cuenta = cuentasMap.get(proyecto.Account__c);
-      if (cuenta == null || cuenta.Maximo_Proyectos_Activos__c == null) {
-        continue;
-      }
-      Integer proyectosActuales = conteoPorCuenta.get(proyecto.Account__c) !=
-        null
-        ? conteoPorCuenta.get(proyecto.Account__c)
-        : 0;
       // Sumar 1 porque este proyecto también cuenta
       if (proyectosActuales + 1 > cuenta.Maximo_Proyectos_Activos__c) {
         proyecto.addError(
